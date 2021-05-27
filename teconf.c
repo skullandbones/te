@@ -68,7 +68,7 @@ cf_cols:      defb CRT_COLS         ;  1 byte  > Screen columns.
 cf_mx_lines:  defw 512              ;  2 bytes > Max. number of lines in editor.
                                     ;            Each line takes 2 bytes (1 word) of memory.
 
-cf_tab_cols:  defb 4                ;  1 byte  > How many spaces a tabulation inserts.
+cf_tab_cols:  defb 8                ;  1 byte  > How many spaces a tabulation inserts.
 
 cf_num:       defb 4                ;  1 byte  > Number of digits for line numbers (see cf_mx_lines) plus 1
                                     ;            for the separator. Set to ZERO for no line numbers.
