@@ -202,18 +202,18 @@ int help_items[] = {
 /* TE modules
    ----------
 */
-#include "te_conf.c"
-#include "te_ui.c"
-#include "te_file.c"
-#include "te_keys.c"
-#include "te_edit.c"
-#include "te_lines.c"
-#include "te_misc.c"
-#include "te_error.c"
+#include "teconf.c"
+#include "teui.c"
+#include "tefile.c"
+#include "tekeys.c"
+#include "teedit.c"
+#include "telines.c"
+#include "temisc.c"
+#include "teerror.c"
 
 #if OPT_MACRO
 
-#include "te_macro.c"
+#include "temacro.c"
 
 #endif
 
