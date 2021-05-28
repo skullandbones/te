@@ -117,6 +117,8 @@ char *fn;
 
 		p = strcpy(lp_arr[lp_now++], ln_dat);
 
+/* DJ: Compile out this code because it corrupts the file */
+#if 0
 		/* Change TABs to SPACEs, and check characters */
 		//while((ch = (*p & 0xFF)))
 		while((ch = *p))
@@ -135,6 +137,7 @@ char *fn;
 
 			++p;
 		}
+#endif
 	}
 
 	/* Close the file */
