@@ -65,8 +65,8 @@
 
 #asm
 
-CRT_ROWS: equ 25  ; CRT rows
-CRT_COLS: equ 120 ; CRT columns
+CRT_ROWS: equ 40   ; CRT rows
+CRT_COLS: equ 130  ; CRT columns
 
 #endasm
 
