@@ -175,6 +175,143 @@ CrtOutRaw:
 	jp   BiosConout
 #endasm
 
+int newkey = 0;
+/* 0 = not received an ESC code
+   1 = got an ESC code
+   2 = got a ESC [ code sequence
+   3 = wait for ESC [ <code> ~ end of sequence
+   4 = got ESC O code sequence
+*/
+int escape_seq = 0;
+CrtInEsc()
+{
+	int ch;
+	int code_key;
+	int wait_char;
+
+	switch(escape_seq)
+	{
+		case 0:
+			/* Wait for a key via BIOS CONIN */
+			ch = CrtInEx();
+
+			if(ch == ESC)
+			{
+				/* Got an ESC code */
+				escape_seq = 1;
+				return 0;
+			}
+			else
+			{
+				/* Normal key handling */
+				return ch;
+			}
+			break;
+		case 1:
+			wait_char = 100;
+
+			/* Use BIOS CONST, returns 0 if no following key, else 0xFF */
+			while(wait_char && !CrtInSt())
+			{
+				/* Avoid false ESC detection, wait a little while */
+				wait_char--;
+			}
+
+			if(!wait_char)
+			{
+				/* No code followed the ESC so declare key is ESC */
+				escape_seq = 0;
+				return ESC;
+			}
+
+			/* Process the code after the ESC code */
+			ch = CrtInEx();
+			switch(ch)
+			{
+				case ESC:
+					/* Detected ESC ESC sequence so declare key is ESC */
+					escape_seq = 0;
+					return ESC;
+				case '[':
+					/* Detected ESC [ sequence */
+					escape_seq = 2;
+					return 0;
+				case 'O':
+					/* Detected ESC O sequence */
+					escape_seq = 4;
+					return 0;
+				default:
+					/* Unhandled ESC <char> sequence */
+					break;
+			}
+			break;
+		case 2:
+			/* Get the code after the ESC [ */
+			code_key = CrtInEx();
+
+			switch(code_key)
+			{
+				/* https://en.wikipedia.org/wiki/ANSI_escape_code#Terminal_input_sequences */
+				/* VT Escape sequence handling */
+				case '1' : /* HOME (start of line) */
+					newkey = CTL_V;
+					escape_seq = 3;
+					return 0;
+				case '3' : /* DEL */
+					newkey = DEL;
+					escape_seq = 3;
+					return 0;
+				case '5' : /* PAGE UP */
+					newkey = CTL_R;
+					escape_seq = 3;
+					return 0;
+				case '6' : /* PAGE DOWN */
+					newkey = CTL_C;;
+					escape_seq = 3;
+					return 0;
+				/* xterm handling */
+				case 'A' : /* UP */
+					escape_seq = 0;
+					return CTL_E;
+				case 'B' : /* DOWN */
+					escape_seq = 0;
+					return CTL_X;
+				case 'C' : /* RIGHT */
+					escape_seq = 0;
+					return CTL_D;
+				case 'D' : /* LEFT */
+					escape_seq = 0;
+					return CTL_S;
+				case 'H' : /* HOME */
+					escape_seq = 0;
+					return CTL_V;
+				case 'F' : /* END */
+					escape_seq = 0;
+					return CTL_A;
+			}
+			break;
+		case 3:
+			if(CrtInEx() == '~')
+			{
+				/* Detected ESC [ <code> ~ end of sequence */
+				escape_seq = 0;
+				return newkey;
+			}
+			break;
+		case 4:
+			if(CrtInEx() == 'F')
+			{
+				/* Detected ESC OF for the END key */
+				escape_seq = 0;
+				return K_END;
+			}
+			break;
+	}
+
+	escape_seq = 0;
+	return 0;
+}
+
 /* Input character from the keyboard
    ---------------------------------
    All program input is done with this function.
@@ -187,39 +324,11 @@ CrtIn()
 {
 	int ch;
 
-	ch = CrtInEx();
+	ch = 0;
 
-	/* Translate key codes begining with 0x1B (ESC) */
-
-	if(ch == 0x1B)
+	while(!ch)
 	{
-		if(CrtInSt())
-		{
-			ch = 0;
-
-			if(CrtInEx() == '[')
-			{
-				if(CrtInSt())
-				{
-					switch(CrtInEx())
-					{
-						case 'A' : /* UP */
-							return CTL_E;
-						case 'B' : /* DOWN */
-							return CTL_X;
-						case 'C' : /* RIGHT */
-							return CTL_D;
-						case 'D' : /* LEFT */
-							return CTL_S;
-						case 'H' : /* HOME */
-							return CTL_V;
-						case 'F' : /* END */
-							return CTL_A;
-					}
-				}
-
-			}
-		}
+		ch = CrtInEsc();
 	}
 
 	return ch;
