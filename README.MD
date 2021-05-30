@@ -1,6 +1,8 @@
 te
 ==
 
+Forked from https://github.com/MiguelVis/te
+
 v1.60 / 22 Feb 2021 for CP/M
 
 (c) 2015-2021 Miguel Garcia / FloppySoftware
