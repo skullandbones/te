@@ -740,7 +740,10 @@ MenuAbout()
 	row++;
 	CenterText(row++, "www.floppysoftware.es");
 	CenterText(row++, "cpm-connections.blogspot.com");
-	CenterText(row  , "floppysoftware@gmail.com");
+	CenterText(row++, "floppysoftware@gmail.com");
+	row++;
+	CenterText(row++, "TEMINCOM.COM by Dean Jenkins");
+	CenterText(row,   "Version: 1.60.1");
 #else
 	row = BOX_ROW;
 
