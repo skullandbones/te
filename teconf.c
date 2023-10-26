@@ -73,11 +73,11 @@ cf_tab_cols:  defb 8                ;  1 byte  > How many spaces a tabulation in
 cf_num:       defb 4                ;  1 byte  > Number of digits for line numbers (see cf_mx_lines) plus 1
                                     ;            for the separator. Set to ZERO for no line numbers.
 
-cf_clang:     defb 1                ;  1 byte  > C language auto completion: [], {}, (), "", '', /**/.
+cf_clang:     defb 0                ;  1 byte  > C language auto completion: [], {}, (), "", '', /**/.
 
-cf_indent:    defb 1                ;  1 byte  > Automatic indent according to the indent of previous line.
+cf_indent:    defb 0                ;  1 byte  > Automatic indent according to the indent of previous line.
 
-cf_list:      defb 1                ;  1 byte  > Automatic list.
+cf_list:      defb 0                ;  1 byte  > Automatic list.
 cf_list_chr:  defb '-*>----',0      ;  8 byte  > Legal characters for automatic lists + ZERO.
 
 ;cf_rul_tab:   defb '!'              ;  1 byte  > Ruler: Tab stop character.
