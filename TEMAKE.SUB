@@ -1,0 +1,8 @@
+; Script to build TEMINCOM.COM
+;
+; Note the script does not stop on errors
+;
+I:CC TEMINCOM.C
+I:ZSM TEMINCOM
+I:HEXTOCOM TEMINCOM
+
