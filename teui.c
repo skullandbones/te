@@ -743,7 +743,7 @@ MenuAbout()
 	CenterText(row++, "floppysoftware@gmail.com");
 	row++;
 	CenterText(row++, "TEMINCOM.COM by Dean Jenkins");
-	CenterText(row,   "Version: 1.60.2");
+	CenterText(row,   "Version: 1.60.3");
 #else
 	row = BOX_ROW;
 
