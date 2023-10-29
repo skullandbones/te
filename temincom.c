@@ -79,6 +79,16 @@ CRT_COLS: equ 130  ; CRT columns
 */
 #include "te.c"
 
+/* ESC sequences key mappings */
+#define KEY_UP		CTL_K
+#define KEY_DOWN	CTL_X
+#define KEY_LEFT	CTL_S
+#define KEY_RIGHT	CTL_D
+#define KEY_HOME	CTL_O
+#define KEY_END		CTL_A
+#define KEY_PGUP	CTL_R
+#define KEY_PGDOWN	CTL_W
+
 /* Setup CRT: Used when the editor starts
    --------------------------------------
    void CrtSetup(void)
@@ -87,32 +97,32 @@ CrtSetup()
 {
 	CrtSetupEx();
 
-	SetKey(K_UP,        CTL_E, '\0', "UP");
-	SetKey(K_DOWN,      CTL_X, '\0', "DOWN");
-	SetKey(K_LEFT,      CTL_S, '\0', "LEFT");
-	SetKey(K_RIGHT,     CTL_D, '\0', "RIGHT");
-	SetKey(K_BEGIN,     CTL_V, '\0', "HOME");
-	SetKey(K_END,       CTL_A, '\0', "END");
-	SetKey(K_TOP,       CTL_P, '\0', NULL);
-	SetKey(K_BOTTOM,    CTL_F, '\0', NULL);
-	SetKey(K_PGUP,      CTL_R, '\0', NULL);
-	SetKey(K_PGDOWN,    CTL_C, '\0', NULL);
-	SetKey(K_TAB,       CTL_I, '\0', "TAB");
-	SetKey(K_CR,        CTL_M, '\0', "ENTER");
-	SetKey(K_ESC,       ESC,   '\0', "ESC");
-	SetKey(K_RDEL,      DEL,   '\0', "DEL");
-	SetKey(K_LDEL,      CTL_H, '\0', "BS");
-	SetKey(K_CUT,       CTL_U, '\0', NULL);
-	SetKey(K_COPY,      CTL_O, '\0', NULL);
-	SetKey(K_PASTE,     CTL_W, '\0', NULL);
-	SetKey(K_DELETE,    CTL_G, '\0', NULL);
-	SetKey(K_CLRCLP,    CTL_T, '\0', NULL);
-#if OPT_FIND
-	SetKey(K_FIND,      CTL_K, '\0', NULL);
-	SetKey(K_NEXT,      CTL_L, '\0', NULL);
-#endif
-#if OPT_GOTO
-	SetKey(K_GOTO,      CTL_J, '\0', NULL);
+	SetKey(K_UP,        KEY_UP,     '\0', "UP");
+	SetKey(K_DOWN,      KEY_DOWN,   '\0', "DOWN");
+	SetKey(K_LEFT,      KEY_LEFT,   '\0', "LEFT");
+	SetKey(K_RIGHT,     KEY_RIGHT,  '\0', "RIGHT");
+	SetKey(K_BEGIN,     KEY_HOME,   '\0', "HOME");
+	SetKey(K_END,       KEY_END,    '\0', "END");
+	SetKey(K_TOP,       CTL_T,      '\0', NULL);
+	SetKey(K_BOTTOM,    CTL_E,      '\0', NULL);
+	SetKey(K_PGUP,      KEY_PGUP,   '\0', NULL);
+	SetKey(K_PGDOWN,    KEY_PGDOWN, '\0', NULL);
+	SetKey(K_TAB,       CTL_I,      '\0', "TAB");
+	SetKey(K_CR,        CTL_M,      '\0', "ENTER");
+	SetKey(K_ESC,       ESC,        '\0', "ESC");
+	SetKey(K_RDEL,      DEL,        '\0', "DEL");
+	SetKey(K_LDEL,      CTL_H,      '\0', "BS");
+	SetKey(K_CUT,       CTL_U,      '\0', NULL);
+	SetKey(K_COPY,      CTL_C,      '\0', NULL);
+	SetKey(K_PASTE,     CTL_V,      '\0', NULL);
+	SetKey(K_DELETE,    CTL_G,      '\0', NULL);
+	SetKey(K_CLRCLP,    CTL_P,      '\0', NULL);
+#if OPT_FIND                            
+	SetKey(K_FIND,      CTL_F,      '\0', NULL);
+	SetKey(K_NEXT,      CTL_N,      '\0', NULL);
+#endif                                  
+#if OPT_GOTO                            
+	SetKey(K_GOTO,      CTL_J,      '\0', NULL);
 #endif
 #if OPT_LWORD
 	/*SetKey(K_LWORD,     '\0', '\0', NULL);*/
@@ -121,12 +131,12 @@ CrtSetup()
 	/*SetKey(K_RWORD,     '\0', '\0', NULL);*/
 #endif
 #if OPT_BLOCK
-	SetKey(K_BLK_START, CTL_B, 'S', NULL);
-	SetKey(K_BLK_END,   CTL_B, 'E', NULL);
-	SetKey(K_BLK_UNSET, CTL_B, 'U', NULL);
-#endif
-#if OPT_MACRO
-	SetKey(K_MACRO,     CTL_Y, '\0', NULL);
+	SetKey(K_BLK_START, CTL_B,      'S', NULL);
+	SetKey(K_BLK_END,   CTL_B,      'E', NULL);
+	SetKey(K_BLK_UNSET, CTL_B,      'U', NULL);
+#endif                                  
+#if OPT_MACRO                           
+	SetKey(K_MACRO,     CTL_Y,      '\0', NULL);
 #endif
 }
 
@@ -254,7 +264,7 @@ CrtInEsc()
 				/* https://en.wikipedia.org/wiki/ANSI_escape_code#Terminal_input_sequences */
 				/* VT Escape sequence handling */
 				case '1' : /* HOME (start of line) */
-					newkey = CTL_V;
+					newkey = KEY_HOME;
 					escape_seq = 3;
 					return 0;
 				case '3' : /* DEL */
@@ -262,32 +272,32 @@ CrtInEsc()
 					escape_seq = 3;
 					return 0;
 				case '5' : /* PAGE UP */
-					newkey = CTL_R;
+					newkey = KEY_PGUP;
 					escape_seq = 3;
 					return 0;
 				case '6' : /* PAGE DOWN */
-					newkey = CTL_C;;
+					newkey = KEY_PGDOWN;
 					escape_seq = 3;
 					return 0;
 				/* xterm handling */
 				case 'A' : /* UP */
 					escape_seq = 0;
-					return CTL_E;
+					return KEY_UP;
 				case 'B' : /* DOWN */
 					escape_seq = 0;
-					return CTL_X;
+					return KEY_DOWN;
 				case 'C' : /* RIGHT */
 					escape_seq = 0;
-					return CTL_D;
+					return KEY_RIGHT;
 				case 'D' : /* LEFT */
 					escape_seq = 0;
-					return CTL_S;
+					return KEY_LEFT;
 				case 'H' : /* HOME */
 					escape_seq = 0;
-					return CTL_V;
+					return KEY_HOME;
 				case 'F' : /* END */
 					escape_seq = 0;
-					return CTL_A;
+					return KEY_END;
 			}
 			break;
 		case 3:
