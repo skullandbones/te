@@ -83,7 +83,7 @@ CRT_COLS: equ 130  ; CRT columns
 #define KEY_UP		CTL_K
 #define KEY_DOWN	CTL_X
 #define KEY_LEFT	CTL_S
-#define KEY_RIGHT	CTL_D
+#define KEY_RIGHT	CTL_G
 #define KEY_HOME	CTL_O
 #define KEY_END		CTL_A
 #define KEY_PGUP	CTL_R
@@ -115,7 +115,7 @@ CrtSetup()
 	SetKey(K_CUT,       CTL_U,      '\0', NULL);
 	SetKey(K_COPY,      CTL_C,      '\0', NULL);
 	SetKey(K_PASTE,     CTL_V,      '\0', NULL);
-	SetKey(K_DELETE,    CTL_G,      '\0', NULL);
+	SetKey(K_DELETE,    CTL_D,      '\0', NULL);
 	SetKey(K_CLRCLP,    CTL_P,      '\0', NULL);
 #if OPT_FIND                            
 	SetKey(K_FIND,      CTL_F,      '\0', NULL);
